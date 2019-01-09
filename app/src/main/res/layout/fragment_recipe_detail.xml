@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.fragments.RecipeListFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/ingredientLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="@dimen/material_text_display1"
+                android:layout_marginTop="@dimen/length_2"
+                android:padding="@dimen/length_4"
+                android:text="@string/recipe_details_ingredients_label"
+                tools:text="@string/recipe_details_ingredients_label"/>
+
+            <include
+                android:id="@+id/ingredientsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/length_2"
+                layout="@layout/recycler_list_layout"/>
+
+            <TextView
+                android:id="@+id/stepLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/length_4"
+                android:textStyle="bold"
+                android:padding="@dimen/length_4"
+                android:textSize="@dimen/material_text_display1"
+                android:text="@string/recipe_details_steps_label"
+                tools:text="@string/recipe_details_steps_label"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/length_2"
+                android:background="@color/colorPrimaryDark"/>
+
+            <include
+                android:id="@+id/stepList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/recycler_list_layout"/>
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

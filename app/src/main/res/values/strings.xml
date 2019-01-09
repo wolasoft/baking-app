@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Baking App</string>
+
+    <string name="fake_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+
+    <string name="recipe_label">Tempura udon</string>
+    <string name="recipe_image_description">Recipe image</string>
+
+    <string name="recipe_details_ingredients_label">Ingredients</string>
+    <string name="recipe_details_divider_image_description">Divider</string>
+    <string name="recipe_details_steps_label">Steps</string>
+    <string name="recipe_details_first_step_message">No previous step</string>
+    <string name="recipe_details_last_step_message">No more step</string>
+
+    <string name="recipe_step_details_button_previous_label">Previous step</string>
+    <string name="recipe_step_details_button_next_label">Next step</string>
+
+    <string name="exo_player_error_message">No valid video available</string>
+</resources>
