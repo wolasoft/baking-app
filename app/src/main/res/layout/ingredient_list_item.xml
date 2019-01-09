@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/length_2"
+    android:paddingStart="@dimen/length_4"
+    android:paddingLeft="@dimen/length_4"
+    android:paddingEnd="@dimen/length_4"
+    android:paddingRight="@dimen/length_4"
+    android:paddingBottom="@dimen/length_2">
+
+    <TextView
+        android:id="@+id/ingredientTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        tools:text="Hello Moto"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/quantityTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="350"
+        android:layout_marginTop="@dimen/length_2"
+        app:layout_constraintTop_toBottomOf="@id/ingredientTV"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/measureTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="G"
+        android:layout_marginStart="@dimen/length_4"
+        android:layout_marginLeft="@dimen/length_4"
+        app:layout_constraintStart_toEndOf="@id/quantityTV"
+        app:layout_constraintLeft_toRightOf="@id/quantityTV"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</android.support.constraint.ConstraintLayout>
