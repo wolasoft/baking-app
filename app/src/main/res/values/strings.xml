@@ -4,16 +4,31 @@
     <string name="fake_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 
     <string name="recipe_label">Tempura udon</string>
+    <string name="recipe_no_selected_recipe_label">No selected recipe available</string>
     <string name="recipe_image_description">Recipe image</string>
+    <string name="recipe_no_data_available_message">No recipe available</string>
+    <string name="recipe_network_error_message">Network error</string>
 
     <string name="recipe_details_ingredients_label">Ingredients</string>
     <string name="recipe_details_divider_image_description">Divider</string>
     <string name="recipe_details_steps_label">Steps</string>
     <string name="recipe_details_first_step_message">No previous step</string>
     <string name="recipe_details_last_step_message">No more step</string>
+    <plurals name="recipe_details_number_of_ingredient">
+        <item quantity="one">Ingredient: %d</item>
+        <item quantity="other">Ingredients: %d</item>
+    </plurals>
+    <string name="recipe_details_number_of_ingredient">Ingredient: 10</string>
+    <plurals name="recipe_details_number_of_step">
+        <item quantity="one">Steps: %d</item>
+        <item quantity="other">Steps: %d</item>
+    </plurals>
+    <string name="recipe_details_number_of_step">Steps: 12</string>
 
     <string name="recipe_step_details_button_previous_label">Previous step</string>
     <string name="recipe_step_details_button_next_label">Next step</string>
 
     <string name="exo_player_error_message">No valid video available</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

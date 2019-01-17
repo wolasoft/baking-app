@@ -1,67 +1,83 @@
 package com.wolasoft.bakingapp.data.repositories;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
+import com.wolasoft.bakingapp.data.api.ApiConnector;
+import com.wolasoft.bakingapp.data.api.services.RecipeService;
 import com.wolasoft.bakingapp.data.models.Recipe;
+import com.wolasoft.bakingapp.data.preferences.RecipePreferences;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 public class RecipeRepository {
 
-    private static final String JSON_FILE_NAME = "data.json";
+    private static final String TAG = "RecipeRepository";
     private static final Object LOCK = new Object();
     private static RecipeRepository instance = null;
-    private final List<Recipe> recipes;
+    private RecipeService recipeService;
+    private RecipePreferences recipePreferences;
+    private Gson gson;
 
 
-    private RecipeRepository(Context context) {
-        Gson gson = new Gson();
-        String json = this.readJsonFile(context);
-        recipes = new ArrayList<>(Arrays.asList(gson.fromJson(json, Recipe[].class)));
+    private RecipeRepository(RecipeService service, Context context) {
+        this.recipeService = service;
+        this.recipePreferences = RecipePreferences.getInstance(context);
+        gson = new Gson();
     }
 
     public static RecipeRepository getInstance(Context context) {
         if (instance == null) {
             synchronized (LOCK) {
-                instance = new RecipeRepository(context);
+                instance = new RecipeRepository(
+                        ApiConnector.createRetrofitService(RecipeService.class), context);
             }
         }
         return instance;
     }
 
-    private String readJsonFile(Context context) {
-        InputStream inputStream;
-        InputStreamReader streamReader;
-        BufferedReader bufferedReader;
-        StringBuilder stringBuilder = new StringBuilder();
+    public LiveData<List<Recipe>> getAll() {
+        final MutableLiveData<List<Recipe>> data = new MutableLiveData<>();
+        Call call = recipeService.getAll();
+        Log.d(TAG, "Fetching recipes");
+        call.enqueue(new Callback<JsonArray>() {
 
-        try {
-            inputStream = context.getResources().getAssets().open(JSON_FILE_NAME);
-            streamReader = new InputStreamReader(inputStream);
-            bufferedReader = new BufferedReader(streamReader);
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
+            @Override
+            public void onResponse(@NonNull Call<JsonArray> call, Response<JsonArray> response) {
+                if (response.isSuccessful()) {
+                    Type listType = new TypeToken<ArrayList<Recipe>>(){}.getType();
+                    List<Recipe> recipes = gson.fromJson(response.body().toString(), listType);
+                    data.setValue(recipes);
+                }
             }
-            inputStream.close();
-            streamReader.close();
-            bufferedReader.close();
 
-        } catch (Exception error) {
-            error.printStackTrace();
-        }
+            @Override
+            public void onFailure(@NonNull Call<JsonArray> call, Throwable t) {
+                data.setValue(null);
+            }
+        });
 
-        return stringBuilder.toString();
+        return data;
     }
 
-    public List<Recipe> getAll() {
-        return recipes;
+    public void saveLastSelectedRecipe(Recipe recipe) {
+        this.recipePreferences.saveRecipe(recipe);
+    }
+
+    public Recipe getLastSelectedRecipe() {
+        return this.recipePreferences.getRecipe();
     }
 }

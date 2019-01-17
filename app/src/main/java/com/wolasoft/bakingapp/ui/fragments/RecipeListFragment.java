@@ -1,12 +1,12 @@
 package com.wolasoft.bakingapp.ui.fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,9 +19,9 @@ import com.wolasoft.bakingapp.adapters.RecipeAdapter;
 import com.wolasoft.bakingapp.data.models.Recipe;
 import com.wolasoft.bakingapp.data.repositories.RecipeRepository;
 import com.wolasoft.bakingapp.databinding.FragmentRecipeListBinding;
+import com.wolasoft.bakingapp.utils.NetworkUtils;
 import com.wolasoft.bakingapp.viewmodels.RecipeViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,7 +29,6 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
     private static final String RECIPE_LIST = "recipe_list";
 
     private int orientation;
-    private List<Recipe> recipes;
     private FragmentRecipeListBinding dataBinding;
     private OnRecipeFragmentInteractionListener mListener;
 
@@ -49,26 +48,32 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
 
         orientation = getResources().getConfiguration().orientation;
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(RECIPE_LIST)) {
-            this.recipes = savedInstanceState.getParcelableArrayList(RECIPE_LIST);
-        } else {
-            recipes = viewModel.getRecipes();
-            recipes = RecipeRepository.getInstance(getContext()).getAll();
-        }
-
-        initViews();
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                initViews(recipes);
+            }
+        });
 
         return dataBinding.getRoot();
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(RECIPE_LIST, (ArrayList<? extends Parcelable>) this.recipes);
-    }
+    private void initViews(List<Recipe> recipes) {
+        showProgress();
+        if (!NetworkUtils.isInternetAvailable(getContext())) {
+            showMessage(R.string.recipe_network_error_message);
+            hideProgress();
 
+            return;
+        }
 
-    private void initViews() {
+        if (recipes == null ) {
+            showMessage(R.string.recipe_no_data_available_message);
+            hideProgress();
+
+            return;
+        }
+
         RecipeAdapter adapter = new RecipeAdapter(recipes, this);
         dataBinding.recipeList.recyclerView.setAdapter(adapter);
 
@@ -84,6 +89,25 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
         }
 
         dataBinding.recipeList.recyclerView.setHasFixedSize(true);
+        hideMessage();
+        hideProgress();
+    }
+
+    private void showProgress() {
+        dataBinding.recipeList.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        dataBinding.recipeList.progressBar.setVisibility(View.GONE);
+    }
+
+    private void showMessage(int id) {
+        dataBinding.recipeList.messageTV.setText(id);
+        dataBinding.recipeList.messageTV.setVisibility(View.VISIBLE);
+    }
+
+    private void hideMessage() {
+        dataBinding.recipeList.messageTV.setVisibility(View.GONE);
     }
 
     @Override
@@ -105,6 +129,8 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
 
     @Override
     public void recipeClicked(Recipe recipe) {
+        RecipeRepository.getInstance(getContext()).saveLastSelectedRecipe(recipe);
+
         if (mListener != null) {
             mListener.onRecipeSelected(recipe);
         }

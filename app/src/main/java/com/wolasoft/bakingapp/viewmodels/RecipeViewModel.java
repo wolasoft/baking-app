@@ -2,6 +2,7 @@ package com.wolasoft.bakingapp.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.wolasoft.bakingapp.data.models.Recipe;
@@ -18,7 +19,7 @@ public class RecipeViewModel extends AndroidViewModel {
         this.repository = RecipeRepository.getInstance(application.getApplicationContext());
     }
 
-    public List<Recipe> getRecipes() {
+    public LiveData<List<Recipe>> getRecipes() {
         return this.repository.getAll();
     }
 }
