@@ -6,7 +6,11 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.wolasoft.bakingapp.data.models.Recipe;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+
+@Singleton
 public class RecipePreferences {
 
     private static final String PREFS_NAME = "com.wolasoft.preferences";
@@ -18,21 +22,12 @@ public class RecipePreferences {
     private final Gson gson;
     private static RecipePreferences instance = null;
 
-    private RecipePreferences(Context context) {
+    @Inject
+    public RecipePreferences(Context context) {
         this.preferences = context.getApplicationContext().getSharedPreferences(
                 PREFS_NAME, Context.MODE_PRIVATE);
         editor = preferences.edit();
         gson = new Gson();
-    }
-
-    public static RecipePreferences getInstance(Context context) {
-        if (instance == null) {
-            synchronized (LOCK) {
-                return new RecipePreferences(context);
-            }
-        }
-
-        return instance;
     }
 
     public void saveRecipe(Recipe recipe) {

@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wolasoft.bakingapp.BakingApplication;
 import com.wolasoft.bakingapp.R;
 import com.wolasoft.bakingapp.adapters.RecipeAdapter;
 import com.wolasoft.bakingapp.data.models.Recipe;
@@ -21,16 +22,22 @@ import com.wolasoft.bakingapp.data.repositories.RecipeRepository;
 import com.wolasoft.bakingapp.databinding.FragmentRecipeListBinding;
 import com.wolasoft.bakingapp.utils.NetworkUtils;
 import com.wolasoft.bakingapp.viewmodels.RecipeViewModel;
+import com.wolasoft.bakingapp.viewmodels.RecipeViewModelFactory;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 
 public class RecipeListFragment extends Fragment implements RecipeAdapter.OnRecipeClickedListener {
-    private static final String RECIPE_LIST = "recipe_list";
 
     private int orientation;
     private FragmentRecipeListBinding dataBinding;
     private OnRecipeFragmentInteractionListener mListener;
+    @Inject
+    public RecipeRepository repository;
+    @Inject
+    public RecipeViewModelFactory factory;
 
     public RecipeListFragment() { }
 
@@ -43,8 +50,10 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
                              Bundle savedInstanceState) {
         dataBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_recipe_list, container,false);
+        BakingApplication.app().getAppComponent().inject(this);
         getActivity().setTitle(R.string.app_name);
-        RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+
+        final RecipeViewModel viewModel = ViewModelProviders.of(this, factory).get(RecipeViewModel.class);
 
         orientation = getResources().getConfiguration().orientation;
 
@@ -129,7 +138,7 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
 
     @Override
     public void recipeClicked(Recipe recipe) {
-        RecipeRepository.getInstance(getContext()).saveLastSelectedRecipe(recipe);
+        repository.saveLastSelectedRecipe(recipe);
 
         if (mListener != null) {
             mListener.onRecipeSelected(recipe);

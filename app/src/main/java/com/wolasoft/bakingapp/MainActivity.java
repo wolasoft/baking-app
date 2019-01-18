@@ -19,6 +19,8 @@ import com.wolasoft.bakingapp.ui.fragments.RecipeDetailFragment;
 import com.wolasoft.bakingapp.ui.fragments.RecipeListFragment;
 import com.wolasoft.bakingapp.ui.fragments.RecipeStepDetailFragment;
 
+import javax.inject.Inject;
+
 public class MainActivity extends AppCompatActivity
         implements RecipeListFragment.OnRecipeFragmentInteractionListener,
         RecipeDetailFragment.OnRecipeDetailFragmentInteractionListener,
@@ -42,11 +44,14 @@ public class MainActivity extends AppCompatActivity
     private String currentFragmentTag;
     private Recipe selectedRecipe;
     private Step firstStep;
+    @Inject
+    public RecipeRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        BakingApplication.app().getAppComponent().inject(this);
         setTitle(R.string.app_name);
 
         detailFragmentView = findViewById(R.id.fragment_details);
@@ -196,11 +201,6 @@ public class MainActivity extends AppCompatActivity
         if (getIntent().hasExtra(KEY_SELECTED_RECIPE)) {
             getIntent().removeExtra(KEY_SELECTED_RECIPE);
         }
-
-        RecipeRepository.getInstance(this).saveLastSelectedRecipe(recipe);
-        Intent appWidgetService = new Intent(this, UpdateWidgetService.class);
-        appWidgetService.setAction(UpdateWidgetService.SHOW_LAST_SELECTED_RECIPE);
-        startService(appWidgetService);
     }
 
     @Override
