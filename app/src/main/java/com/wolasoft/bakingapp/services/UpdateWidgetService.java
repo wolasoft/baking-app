@@ -3,11 +3,9 @@ package com.wolasoft.bakingapp.services;
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
-import com.wolasoft.bakingapp.data.models.Recipe;
 import com.wolasoft.bakingapp.widgets.RecipeAppWidget;
 
 public class UpdateWidgetService extends IntentService {
@@ -26,12 +24,14 @@ public class UpdateWidgetService extends IntentService {
             if (action.equals(SHOW_LAST_SELECTED_RECIPE)) {
                 try {
                     AppWidgetManager manager = AppWidgetManager.getInstance(getApplicationContext());
+
                     ComponentName componentName =
                             new ComponentName(getApplicationContext(), RecipeAppWidget.class);
+
                     int []ids = manager.getAppWidgetIds(componentName);
-                    Intent widgetIntent = new Intent(getApplicationContext(), RecipeAppWidget.class);
+
+                    Intent widgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                     widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                    widgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                     getApplicationContext().sendBroadcast(widgetIntent);
                 } catch (Exception error) {
                     error.getMessage();

@@ -184,6 +184,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRecipeSelected(Recipe recipe) {
         openRecipeDetailFragment(recipe);
+        repository.saveLastSelectedRecipe(recipe);
+
+        updateAppWidget();
     }
 
     private void openRecipeDetailFragment(Recipe recipe) {
@@ -252,5 +255,11 @@ public class MainActivity extends AppCompatActivity
             replaceFragment(
                     R.id.fragment_container, recipeStepDetailFragment, RECIPE_STEP_FRAGMENT_TAG);
         }
+    }
+
+    private void updateAppWidget() {
+        Intent appWidgetService = new Intent(this, UpdateWidgetService.class);
+        appWidgetService.setAction(UpdateWidgetService.SHOW_LAST_SELECTED_RECIPE);
+        startService(appWidgetService);
     }
 }
