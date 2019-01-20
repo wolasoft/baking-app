@@ -1,15 +1,15 @@
 package com.wolasoft.bakingapp.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.wolasoft.bakingapp.R;
 import com.wolasoft.bakingapp.data.models.Ingredient;
+import com.wolasoft.bakingapp.databinding.IngredientListItemBinding;
 
 import java.util.List;
 
@@ -27,8 +27,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.ingredient_list_item, viewGroup, false);
-        return new ViewHolder(view);
+        // View view = inflater.inflate(R.layout.ingredient_list_item, viewGroup, false);
+        IngredientListItemBinding dataBinding = DataBindingUtil.inflate(
+                inflater, R.layout.ingredient_list_item, viewGroup, false
+        );
+        return new ViewHolder(dataBinding);
     }
 
     @Override
@@ -43,22 +46,16 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        private final IngredientListItemBinding dataBinding;
 
-        private final TextView ingredientTV;
-        private final TextView quantityTV;
-        private final TextView measureTV;
-
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ingredientTV = itemView.findViewById(R.id.ingredientTV);
-            quantityTV = itemView.findViewById(R.id.quantityTV);
-            measureTV = itemView.findViewById(R.id.measureTV);
+        ViewHolder(@NonNull IngredientListItemBinding dataBinding) {
+            super(dataBinding.getRoot());
+            this.dataBinding = dataBinding;
         }
 
         void bind(Ingredient ingredient) {
-            this.ingredientTV.setText(ingredient.getIngredient());
-            this.quantityTV.setText(String.format("%2f", ingredient.getQuantity()));
-            this.measureTV.setText(ingredient.getMeasure());
+            dataBinding.setIngredient(ingredient);
+            dataBinding.executePendingBindings();
         }
     }
 }
