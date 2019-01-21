@@ -21,7 +21,7 @@ public class RecipeAppWidget extends AppWidgetProvider {
     @Inject
     public RecipeRepository repository;
 
-    void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
+    private void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_app_widget);
         BakingApplication.app().getAppComponent().inject(this);

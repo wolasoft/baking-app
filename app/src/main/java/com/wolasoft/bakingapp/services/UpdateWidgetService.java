@@ -11,7 +11,7 @@ import com.wolasoft.bakingapp.widgets.RecipeAppWidget;
 public class UpdateWidgetService extends IntentService {
 
     public static final String SHOW_LAST_SELECTED_RECIPE = "show_selected_recipe";
-    public static final String TAG = "UpdateWidgetService";
+    private static final String TAG = "UpdateWidgetService";
 
     public UpdateWidgetService() {
         super(TAG);
@@ -22,20 +22,16 @@ public class UpdateWidgetService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (action.equals(SHOW_LAST_SELECTED_RECIPE)) {
-                try {
-                    AppWidgetManager manager = AppWidgetManager.getInstance(getApplicationContext());
+                AppWidgetManager manager = AppWidgetManager.getInstance(getApplicationContext());
 
-                    ComponentName componentName =
-                            new ComponentName(getApplicationContext(), RecipeAppWidget.class);
+                ComponentName componentName =
+                        new ComponentName(getApplicationContext(), RecipeAppWidget.class);
 
-                    int []ids = manager.getAppWidgetIds(componentName);
+                int []ids = manager.getAppWidgetIds(componentName);
 
-                    Intent widgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                    getApplicationContext().sendBroadcast(widgetIntent);
-                } catch (Exception error) {
-                    error.getMessage();
-                }
+                Intent widgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                widgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                getApplicationContext().sendBroadcast(widgetIntent);
             }
         }
     }
