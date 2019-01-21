@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -84,12 +83,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void restoreState(Bundle savedInstanceState) {
-        Log.d("MAINNNNN", "RESTOREEEEE");
         isUpMenuItemVisible = savedInstanceState.getBoolean(BACK_STATE);
 
         if (isUpMenuItemVisible) {
             selectedRecipe = savedInstanceState.getParcelable(KEY_SELECTED_RECIPE);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         } else {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
@@ -175,7 +172,7 @@ public class MainActivity extends AppCompatActivity
                 .addToBackStack(null)
                 .commit();
 
-        if (!isUpMenuItemVisible || !(fragment instanceof RecipeListFragment)) {
+        if (!(fragment instanceof RecipeListFragment)) {
             isUpMenuItemVisible = true;
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

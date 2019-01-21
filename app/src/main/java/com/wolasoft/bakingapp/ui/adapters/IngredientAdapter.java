@@ -1,4 +1,4 @@
-package com.wolasoft.bakingapp.adapters;
+package com.wolasoft.bakingapp.ui.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;

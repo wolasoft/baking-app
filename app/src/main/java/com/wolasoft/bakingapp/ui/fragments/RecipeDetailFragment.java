@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wolasoft.bakingapp.R;
-import com.wolasoft.bakingapp.adapters.IngredientAdapter;
-import com.wolasoft.bakingapp.adapters.StepAdapter;
 import com.wolasoft.bakingapp.data.models.Recipe;
 import com.wolasoft.bakingapp.data.models.Step;
 import com.wolasoft.bakingapp.databinding.FragmentRecipeDetailBinding;
+import com.wolasoft.bakingapp.ui.adapters.IngredientAdapter;
+import com.wolasoft.bakingapp.ui.adapters.StepAdapter;
 
 
 public class RecipeDetailFragment extends Fragment implements StepAdapter.OnStepClickedListener {
