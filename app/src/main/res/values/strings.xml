@@ -29,6 +29,4 @@
     <string name="recipe_step_details_button_next_label">Next step</string>
 
     <string name="exo_player_error_message">No valid video available</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
 </resources>

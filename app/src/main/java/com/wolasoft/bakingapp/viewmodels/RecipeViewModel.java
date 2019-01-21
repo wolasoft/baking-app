@@ -12,9 +12,7 @@ public class RecipeViewModel extends ViewModel {
 
     public RecipeRepository repository;
 
-    // @Inject
     public RecipeViewModel(RecipeRepository repository) {
-        // BakingApplication.app().getAppComponent().inject(this);
         this.repository = repository;
     }
 

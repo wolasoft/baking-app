@@ -9,7 +9,6 @@ import com.wolasoft.bakingapp.data.preferences.RecipePreferences;
 import com.wolasoft.bakingapp.data.repositories.RecipeRepository;
 import com.wolasoft.bakingapp.viewmodels.RecipeViewModelFactory;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;

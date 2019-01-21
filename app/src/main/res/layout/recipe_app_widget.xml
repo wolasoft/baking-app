@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorPrimary">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/recipeImage"
@@ -39,8 +38,8 @@
             android:id="@+id/numberOfIngredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/length_4"
-            android:paddingRight="@dimen/length_4"
+            android:layout_marginEnd="@dimen/length_4"
+            android:layout_marginRight="@dimen/length_4"
             android:textColor="@color/colorWhite"
             tools:text="@string/recipe_details_number_of_ingredient"
             android:textSize="@dimen/material_text_body2" />
