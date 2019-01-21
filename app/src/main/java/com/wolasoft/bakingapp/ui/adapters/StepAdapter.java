@@ -1,17 +1,16 @@
-package com.wolasoft.bakingapp.adapters;
+package com.wolasoft.bakingapp.ui.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wolasoft.bakingapp.R;
 import com.wolasoft.bakingapp.data.models.Step;
+import com.wolasoft.bakingapp.databinding.StepListItemBinding;
 
 import java.util.List;
 
@@ -30,9 +29,8 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        View view = inflater.inflate(R.layout.step_list_item, viewGroup, false);
-        return new ViewHolder(view);
+        StepListItemBinding dataBinding = DataBindingUtil.inflate(inflater, R.layout.step_list_item, viewGroup, false);
+        return new ViewHolder(dataBinding);
     }
 
     @Override
@@ -48,31 +46,17 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final Context context;
-        private final ImageView thumbnail;
-        private final TextView shortDescriptionTV;
+        private final StepListItemBinding dataBinding;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            context = itemView.getContext();
-            thumbnail = itemView.findViewById(R.id.thumbnail);
-            shortDescriptionTV = itemView.findViewById(R.id.shortDescriptionTV);
+        ViewHolder(@NonNull StepListItemBinding dataBinding) {
+            super(dataBinding.getRoot());
+            this.dataBinding = dataBinding;
 
             itemView.setOnClickListener(this);
         }
 
         void bind(Step step) {
-            if (step.getThumbnailURL().isEmpty()) {
-                thumbnail.setImageDrawable(
-                        this.context.getResources().getDrawable(R.drawable.step));
-            } else {
-                Picasso.get()
-                        .load(step.getThumbnailURL())
-                        .error(R.drawable.recipe)
-                        .placeholder(R.drawable.recipe)
-                        .into(thumbnail);
-            }
-            this.shortDescriptionTV.setText(step.getShortDescription());
+            dataBinding.setStep(step);
         }
 
         @Override

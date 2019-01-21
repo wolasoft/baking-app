@@ -1,0 +1,57 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
+
+    <ImageView
+        android:id="@+id/recipeImage"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/recipe_image_description"
+        android:src="@drawable/recipe"
+        android:scaleType="center"
+        tools:src="@drawable/recipe"/>
+
+    <TextView
+        android:id="@+id/recipeName"
+        android:padding="@dimen/length_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorWhite"
+        tools:text="@string/recipe_label"
+        android:textSize="@dimen/material_text_subhead"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/length_4"
+        android:paddingLeft="@dimen/length_4"
+        android:paddingEnd="@dimen/length_4"
+        android:paddingRight="@dimen/length_4"
+        android:paddingBottom="@dimen/length_4">
+
+        <TextView
+            android:id="@+id/numberOfIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/length_4"
+            android:paddingRight="@dimen/length_4"
+            android:textColor="@color/colorWhite"
+            tools:text="@string/recipe_details_number_of_ingredient"
+            android:textSize="@dimen/material_text_body2" />
+
+        <TextView
+            android:id="@+id/numberOfStep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            tools:text="@string/recipe_details_number_of_step"
+            android:textSize="@dimen/material_text_body2" />
+    </LinearLayout>
+
+</LinearLayout>

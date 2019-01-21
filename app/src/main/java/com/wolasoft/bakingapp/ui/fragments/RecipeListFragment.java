@@ -1,12 +1,12 @@
 package com.wolasoft.bakingapp.ui.fragments;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,24 +14,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.wolasoft.bakingapp.BakingApplication;
 import com.wolasoft.bakingapp.R;
-import com.wolasoft.bakingapp.adapters.RecipeAdapter;
 import com.wolasoft.bakingapp.data.models.Recipe;
 import com.wolasoft.bakingapp.data.repositories.RecipeRepository;
 import com.wolasoft.bakingapp.databinding.FragmentRecipeListBinding;
+import com.wolasoft.bakingapp.ui.adapters.RecipeAdapter;
+import com.wolasoft.bakingapp.utils.NetworkUtils;
 import com.wolasoft.bakingapp.viewmodels.RecipeViewModel;
+import com.wolasoft.bakingapp.viewmodels.RecipeViewModelFactory;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 public class RecipeListFragment extends Fragment implements RecipeAdapter.OnRecipeClickedListener {
-    private static final String RECIPE_LIST = "recipe_list";
 
     private int orientation;
-    private List<Recipe> recipes;
     private FragmentRecipeListBinding dataBinding;
     private OnRecipeFragmentInteractionListener mListener;
+    @Inject
+    public RecipeRepository repository;
+    @Inject
+    public RecipeViewModelFactory factory;
 
     public RecipeListFragment() { }
 
@@ -44,46 +50,73 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
                              Bundle savedInstanceState) {
         dataBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_recipe_list, container,false);
+        BakingApplication.app().getAppComponent().inject(this);
         getActivity().setTitle(R.string.app_name);
-        RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+
+        final RecipeViewModel viewModel = ViewModelProviders.of(this, factory).get(RecipeViewModel.class);
 
         orientation = getResources().getConfiguration().orientation;
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(RECIPE_LIST)) {
-            this.recipes = savedInstanceState.getParcelableArrayList(RECIPE_LIST);
-        } else {
-            recipes = viewModel.getRecipes();
-            recipes = RecipeRepository.getInstance(getContext()).getAll();
-        }
-
-        initViews();
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                initViews(recipes);
+            }
+        });
 
         return dataBinding.getRoot();
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(RECIPE_LIST, (ArrayList<? extends Parcelable>) this.recipes);
-    }
+    private void initViews(List<Recipe> recipes) {
+        showProgress();
+        if (!NetworkUtils.isInternetAvailable(getContext())) {
+            showMessage(R.string.recipe_network_error_message);
+            hideProgress();
 
+            return;
+        }
 
-    private void initViews() {
+        if (recipes == null ) {
+            showMessage(R.string.recipe_no_data_available_message);
+            hideProgress();
+
+            return;
+        }
+
         RecipeAdapter adapter = new RecipeAdapter(recipes, this);
-        dataBinding.recipeList.recyclerView.setAdapter(adapter);
+        dataBinding.recipeList.setAdapter(adapter);
 
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(
                     getContext(), LinearLayoutManager.VERTICAL, false);
-            dataBinding.recipeList.recyclerView.setLayoutManager(layoutManager);
+            dataBinding.recipeList.setLayoutManager(layoutManager);
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            int spanCount = 3;
+            int spanCount = 2;
             GridLayoutManager layoutManager = new GridLayoutManager(
                     getContext(), spanCount, LinearLayoutManager.VERTICAL, false);
-            dataBinding.recipeList.recyclerView.setLayoutManager(layoutManager);
+            dataBinding.recipeList.setLayoutManager(layoutManager);
         }
 
-        dataBinding.recipeList.recyclerView.setHasFixedSize(true);
+        dataBinding.recipeList.setHasFixedSize(true);
+        hideMessage();
+        hideProgress();
+    }
+
+    private void showProgress() {
+        dataBinding.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgress() {
+        dataBinding.progressBar.setVisibility(View.GONE);
+    }
+
+    private void showMessage(int id) {
+        dataBinding.messageTV.setText(id);
+        dataBinding.messageTV.setVisibility(View.VISIBLE);
+    }
+
+    private void hideMessage() {
+        dataBinding.messageTV.setVisibility(View.GONE);
     }
 
     @Override
@@ -105,6 +138,8 @@ public class RecipeListFragment extends Fragment implements RecipeAdapter.OnReci
 
     @Override
     public void recipeClicked(Recipe recipe) {
+        repository.saveLastSelectedRecipe(recipe);
+
         if (mListener != null) {
             mListener.onRecipeSelected(recipe);
         }

@@ -1,24 +1,24 @@
 package com.wolasoft.bakingapp.viewmodels;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModel;
 
 import com.wolasoft.bakingapp.data.models.Recipe;
 import com.wolasoft.bakingapp.data.repositories.RecipeRepository;
 
 import java.util.List;
 
-public class RecipeViewModel extends AndroidViewModel {
+public class RecipeViewModel extends ViewModel {
 
-    private final RecipeRepository repository;
+    public RecipeRepository repository;
 
-    public RecipeViewModel(@NonNull Application application) {
-        super(application);
-        this.repository = RecipeRepository.getInstance(application.getApplicationContext());
+    // @Inject
+    public RecipeViewModel(RecipeRepository repository) {
+        // BakingApplication.app().getAppComponent().inject(this);
+        this.repository = repository;
     }
 
-    public List<Recipe> getRecipes() {
+    public LiveData<List<Recipe>> getRecipes() {
         return this.repository.getAll();
     }
 }

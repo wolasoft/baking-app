@@ -1,17 +1,16 @@
-package com.wolasoft.bakingapp.adapters;
+package com.wolasoft.bakingapp.ui.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.wolasoft.bakingapp.R;
 import com.wolasoft.bakingapp.data.models.Recipe;
+import com.wolasoft.bakingapp.databinding.RecipeListItemBinding;
 
 import java.util.List;
 
@@ -31,8 +30,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.recipe_list_item, viewGroup, false);
-        return new ViewHolder(view);
+        RecipeListItemBinding dataBinding =
+                DataBindingUtil.inflate(inflater, R.layout.recipe_list_item, viewGroup, false);
+        return new ViewHolder(dataBinding);
     }
 
     @Override
@@ -48,31 +48,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ImageView recipeImage;
-        private final TextView recipeNameTV;
-        private final Context context;
+        private RecipeListItemBinding dataBinding;
 
-        ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            context = itemView.getContext();
-            recipeImage = itemView.findViewById(R.id.recipeImage);
-            recipeNameTV = itemView.findViewById(R.id.recipeNameTV);
-
+        ViewHolder(@NonNull RecipeListItemBinding dataBinding) {
+            super(dataBinding.getRoot());
+            this.dataBinding = dataBinding;
             itemView.setOnClickListener(this);
         }
 
         void bind(Recipe recipe) {
-            if (recipe.getImage().isEmpty()) {
-                recipeImage.setImageDrawable(
-                        this.context.getResources().getDrawable(R.drawable.recipe));
-            } else {
-                Picasso.get()
-                        .load(recipe.getImage())
-                        .error(R.drawable.recipe)
-                        .placeholder(R.drawable.recipe)
-                        .into(recipeImage);
-            }
-            this.recipeNameTV.setText(recipe.getName());
+            this.dataBinding.setRecipe(recipe);
         }
 
         @Override

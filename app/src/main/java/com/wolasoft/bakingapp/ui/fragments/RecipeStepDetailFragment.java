@@ -15,7 +15,6 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
@@ -135,7 +134,6 @@ public class RecipeStepDetailFragment extends Fragment implements ExoPlayer.Even
             exitFullScreenMode();
         }
     }
-
 
     private void enterFullScreenMode() {
         if (dataBinding.playerView != null) {
@@ -267,12 +265,10 @@ public class RecipeStepDetailFragment extends Fragment implements ExoPlayer.Even
     @Override
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
-            createPlayer();
+        createPlayer();
 
-            if (dataBinding.playerView != null) {
-                dataBinding.playerView.onResume();
-            }
+        if (dataBinding.playerView != null) {
+            dataBinding.playerView.onResume();
         }
     }
 
@@ -280,12 +276,10 @@ public class RecipeStepDetailFragment extends Fragment implements ExoPlayer.Even
     public void onResume() {
         super.onResume();
 
-        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
-            createPlayer();
+        createPlayer();
 
-            if (dataBinding.playerView != null) {
-                dataBinding.playerView.onResume();
-            }
+        if (dataBinding.playerView != null) {
+            dataBinding.playerView.onResume();
         }
     }
 
@@ -294,12 +288,10 @@ public class RecipeStepDetailFragment extends Fragment implements ExoPlayer.Even
         super.onPause();
         goToBackground();
 
-        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
-            releasePlayer();
+        releasePlayer();
 
-            if (dataBinding.playerView != null) {
-                dataBinding.playerView.onPause();
-            }
+        if (dataBinding.playerView != null) {
+            dataBinding.playerView.onPause();
         }
     }
 
@@ -308,12 +300,10 @@ public class RecipeStepDetailFragment extends Fragment implements ExoPlayer.Even
         super.onStop();
         goToForeground();
 
-        if (Util.SDK_INT <= Build.VERSION_CODES.M) {
-            releasePlayer();
+        releasePlayer();
 
-            if (dataBinding.playerView != null) {
-                dataBinding.playerView.onPause();
-            }
+        if (dataBinding.playerView != null) {
+            dataBinding.playerView.onPause();
         }
     }
 
@@ -342,7 +332,6 @@ public class RecipeStepDetailFragment extends Fragment implements ExoPlayer.Even
             mediaSessionCompat.setActive(false);
         }
     }
-
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {

@@ -4,14 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.fragments.RecipeListFragment">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/recipeList"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/length_16"
+            android:layout_height="@dimen/length_16"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/messageTV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            layout="@layout/recycler_list_layout"/>
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/material_text_headline"
+            tools:text="@string/recipe_no_data_available_message"
+            tools:visibility="visible"
+            android:visibility="gone"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recipeList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
 </layout>
